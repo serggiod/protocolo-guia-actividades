@@ -1,20 +1,111 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{title}}!
-  </h1>
-  <img width="300" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<app-header></app-header>
+<h4 class="text-center">Ceremonial y Protocolo</h4>
+<br/>   
+<div class="card card-outline-info w-75 mx-auto text-white">
+    <div class="card-header bg-info">
+        GUIA DE ACTIVIDADES
+    </div>
+    <div class="card-block container">
+        <div class="row text-black">
+            <div class="col-4">
+                <strong>Dia:</strong> Viernes 20 de Octubre
+                <br/>
+                <strong>Hora:</strong> 21:00
+            </div>
+            <div class="col-8">
+                <strong><u>Bº Coronel Arias</u> - Vilcapugio Nº 1907</strong>
+                <p>Cena Show por el Día Nacional del Técnico.</p>
+                <p><strong>Invita:</strong> Presidente de la Asociación de Técnicos Nacionales Miguel Morales.</p>
+            </div>
 
+            <!-- Formulario Eventos -->
+            <div class="card card-outline-info w-75 mx-auto text-white">
+                <div class="card-header bg-info">
+                    Nueva Actividad
+                </div>
+                <div class="card-block text-black">
+
+                    <!-- Dia -->
+                    <div class="input-group">
+                        <span   class="input-group-addon"><img src="/imgcdn/icons/calendar.png"/></span>
+                        <span   class="input-group-addon">Día: </span>
+                        <select class="form-control text-center"><option *ngFor="let d of dias" value="{{d}}">{{d}}</option></select>
+                        <span   class="input-group-addon">Mes: </span>
+                        <select class="form-control text-center"><option *ngFor="let m of meses" value="{{m}}">{{m}}</option></select>
+                        <span   class="input-group-addon">Año: </span>
+                        <select class="form-control text-center"><option *ngFor="let a of anios" value="{{a}}">{{a}}</option></select>
+                    <!--/div-->
+
+                    <!-- Hora -->
+                    <!--div class="input-group"-->
+                        <span class="input-group-addon"><img src="/imgcdn/icons/clock-frame.png"/></span>
+                        <span class="input-group-addon">Hora: </span>
+                        <select class="form-control text-center"><option *ngFor="let h of horas" value="{{h}}">{{h}}</option></select>
+                        <span class="input-group-addon">Minutos: </span>
+                        <select class="form-control text-center"><option *ngFor="let m of minutos" value="{{m}}">{{m}}</option></select>
+                    </div>
+
+                    <!-- Lugar -->
+                    <div class="input-group">
+                        <span class="input-group-addon"><img src="/imgcdn/icons/card.png"/></span>
+                        <span class="input-group-addon">Lugar:</span>
+                        <select class="form-control text-center"><option *ngFor="let l of lugares" value="l.uriname">{{l.name}}</option></select>
+                        <button type="button" class="btn btn-success"><img src="/imgcdn/icons/plus-button.png"/></button>
+                        <button type="button" class="btn btn-danger"><img src="/imgcdn/icons/minus-button.png"/></button>
+                    </div>
+
+                    <!-- Titulo -->
+                    <div class="input-group">
+                        <span class="input-group-addon"><img src="/imgcdn/icons/card.png"/></span>
+                        <span class="input-group-addon">Lugar:</span>
+                        <input class="form-control" type="text"/>
+                    </div>
+
+                    <!-- Evento -->
+                    <div class="input-group">
+                        <span class="input-group-addon"><img src="/imgcdn/icons/calendar-previous.png"/></span>
+                        <span class="input-group-addon">Evento:</span>
+                        <input class="form-control" type="text"/>
+                    </div>
+
+                    <!-- Invita -->
+                    <div class="input-group">
+                        <span class="input-group-addon"><img src="/imgcdn/icons/tie.png"/></span>
+                        <span class="input-group-addon">Invita:</span>
+                        <input class="form-control" type="text"/>
+                    </div>
+
+                </div>
+                <div class="card-footer text-right">
+                    <button
+                        [ngClass] = "['btn', 'btn-danger','cssBtnFixedWidth']"
+                        type      = "button"
+                        (click)   = "cancelar()">
+                        <img src  = "/imgcdn/icons/cross-circle.png"/>
+                        Cancelar
+                    </button>
+        
+                    <button
+                        [ngClass] = "['btn', 'btn-info','cssBtnFixedWidth']"
+                        type      = "button"
+                        (click)   = "guardar()">
+                        <img src  = "/imgcdn/icons/plus-circle.png"/>
+                        Guardar
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="card-footer text-right">
+        <div class="btn-group">
+            <button
+                [ngClass] = "['btn','btn-info','cssBtnFixedWidth',cssBtnNuevo]"
+                type      = "button"
+                (click)   = "nuevo()">
+                <img src  = "/imgcdn/icons/card--plus.png"/>
+                Nuevo
+            </button>
+        </div>
+    </div>
+</div>

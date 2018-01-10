@@ -1,0 +1,26 @@
+.show{
+    display : block;
+}
+.hide{
+    display : none;
+}
+
+.cssBtnFixedWidth{
+    width : 150px;
+}
+
+.cssInputWidth1{
+    width : 40px;
+}
+
+.cssInputWidth2{
+    width : 120px;
+}
+
+.cssInputWidth3{
+    width : 60px;
+}
+
+.text-black{
+    color : #000000;
+}
