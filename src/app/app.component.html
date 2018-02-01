@@ -1,111 +1,470 @@
 <app-header></app-header>
 <h4 class="text-center">Ceremonial y Protocolo</h4>
 <br/>   
-<div class="card card-outline-info w-75 mx-auto text-white">
+<div
+    [ngClass]="['card', 'card-outline-info', 'w-75', 'mx-auto', 'text-white', page]">
     <div class="card-header bg-info">
         GUIA DE ACTIVIDADES
     </div>
+
+    <!-- Body -->
     <div class="card-block container">
-        <div class="row text-black">
+
+        <!-- Lista de Eventos -->
+        <div
+            *ngFor="let e of eventos; index as i;"
+            class="row text-black align-items-center justify-content-center no-gutters">
             <div class="col-4">
-                <strong>Dia:</strong> Viernes 20 de Octubre
+                <strong>{{i}} Dia:</strong> {{e.date.dia}} de {{monthToString(e.date.mes)}} de {{e.date.anio}}
                 <br/>
-                <strong>Hora:</strong> 21:00
-            </div>
-            <div class="col-8">
-                <strong><u>Bº Coronel Arias</u> - Vilcapugio Nº 1907</strong>
-                <p>Cena Show por el Día Nacional del Técnico.</p>
-                <p><strong>Invita:</strong> Presidente de la Asociación de Técnicos Nacionales Miguel Morales.</p>
+                <strong>Hora:</strong> {{e.date.hora}}:{{e.date.minutos}}
+                <br/>
+                <span *ngIf="e.status==='ACTIVO' then viewActive else viweInActive"></span>
+                <ng-template #viewActive><span class="badge badge-success text-lg text-uppercase ">Visible en la web.</span></ng-template>
+                <ng-template #viewInActive><span></span></ng-template>
+                <br/>
+
+                <!-- Boton: Evento Eliminar./ -->
+                <button
+                    class   = "btn btn-danger btn-sm"
+                    type    = "button"
+                    (click) = "viewDialogoEventoEliminar(i)">
+                    <img src="/imgcdn/icons/minus-button.png"/>
+                </button>
+                    <!-- Dialogo: Evento Eliminar./ -->
+                    <div
+                        class       = "modal fade"
+                        id          = "modalEventosEliminar"
+                        tabindex    = "-1"
+                        role        = "dialog"
+                        aria-hidden = "true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header bg-danger text-white">
+                                    <h5 class="modal-title"><img src="/imgcdn/icons/card.png"/> EVENTO / Eliminar</h5>
+                                </div>
+                                <div class="modal-body text-center">
+                                    <div [ngClass]="['alert',alertEvento.type]">{{alertEvento.text}}</div>
+                                    ¿Esta seguro que desea eliminar este evento?
+                                </div>
+                                <div class="modal-footer">
+                                    <button
+                                        type  = "button"
+                                        class = "btn btn-danger btn-sm"
+                                        data-dismiss = "modal">
+                                        <img src="/imgcdn/icons/cross-button.png"/>
+                                        Cancelar
+                                    </button>
+                                    <button
+                                        type    = "button"
+                                        class   = "btn btn-success btn-sm"
+                                        (click) = "viewEliminar()">
+                                        <img src="/imgcdn/icons/tick-button.png"/>
+                                        Aceptar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Dialogo: Evento Eliminar. -->
+                <!-- /Boton: Evento Eliminar. -->
+
+                <!-- Boton: Evento Modificar/ -->
+                <button
+                    class   = "btn btn-info btn-sm"
+                    type    = "button"
+                    (click) = "viewDialogoEventoModificar(i)">
+                    <img src="/imgcdn/icons/pencil-button.png"/>
+                    <!--Modificar-->
+                </button>
+                    <!-- Dialogo: Evento Modificar./ -->
+                    <div
+                        class       = "modal fade"
+                        id          = "modalEventosModificar"
+                        tabindex    = "-1"
+                        role        = "dialog"
+                        aria-hidden = "true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header bg-info text-white">
+                                    <h5 class="modal-title"><img src="/imgcdn/icons/card.png"/> EVENTO / Modificar</h5>
+                                </div>
+                                <div class="modal-body text-center">
+                                    ¿Esta seguro que desea modificar este evento?
+                                </div>
+                                <div class="modal-footer">
+                                    <button
+                                        type  = "button"
+                                        class = "btn btn-danger btn-sm"
+                                        data-dismiss = "modal">
+                                        <img src="/imgcdn/icons/cross-button.png"/>
+                                        Cancelar
+                                    </button>
+                                    <button
+                                        type    = "button"
+                                        class   = "btn btn-success btn-sm"
+                                        (click) = "viewModificar()">
+                                        <img src="/imgcdn/icons/tick-button.png"/>
+                                        Aceptar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Dialogo: Evento Modificar. -->
+                <!-- /Boton: Evento Modificar -->
+
+                <!-- Boton: Evento Fotografias/ -->
+                <button
+                    class   = "btn btn-warning btn-sm"
+                    type    = "button"
+                    (click) = "viewDialogoFotografiasMas(i)">
+                    <img src  ="/imgcdn/icons/image.png">
+                </button>
+                <!-- /Boton: Evento Fotografias/ -->
+
+                <!-- Boton: Visualizar web/ -->
+                <button
+                    class    = "btn btn-secondary btn-sm"
+                    type     = "button"
+                    (click)  = "viewDialogEventoConfirmChangeStatus(dialogConfirmChangeStatus,i)">
+                    <img src = "/imgcdn/icons/globe--arrow.png">
+                </button>
+                    <!-- Dialogo confirmar cambio de estado/ -->
+                    <ng-template #dialogConfirmChangeStatus>
+                        <div class="modal-header bg-info text-white">
+                            <h5 class="modal-title"><img src="/imgcdn/icons/globe--arrow.png"/> EVENTO / Ver en la Web</h5>
+                        </div>
+                        <div class="modal-body text-center">
+                            ¿Esta seguro que desea publicar este evento en la pagina web?
+                        </div>
+                        <div class="modal-footer">
+                            <button
+                                type    = "button"
+                                class   = "btn btn-danger btn-sm"
+                                (click) = "viewDialogEventoConfirmChangeStatusCerrar()">
+                                <img src="/imgcdn/icons/cross-button.png"/>
+                                Cerrar
+                            </button>
+                            <button
+                                type    = "button"
+                                class   = "btn btn-info btn-sm"
+                                (click) = "viewDialogEventoConfirmChangeStatusInactive()">
+                                <img src="/imgcdn/icons/globe--minus.png"/>
+                                No Publicar
+                            </button>
+                            <button
+                                type    = "button"
+                                class   = "btn btn-success btn-sm"
+                                (click) = "viewDialogEventoConfirmChangeStatusActive()">
+                                <img src="/imgcdn/icons/globe--plus.png"/>
+                                Si Publicar
+                            </button>
+                        </div>
+                    </ng-template>
+                    <!-- /Dialogo confirmar cambio de estado. -->
+                <!-- /Boton: Visualizar web -->
+
             </div>
 
-            <!-- Formulario Eventos -->
-            <div class="card card-outline-info w-75 mx-auto text-white">
+            <!-- Evento./ -->
+            <div class="col-6">
+                <p>
+                    <span *ngIf="e.lugar.uriname==='------' then name else lugarName"></span>
+                    <ng-template #name><strong><u>{{e.name}}</u></strong><br/></ng-template>
+                    <ng-template #lugarName><strong><u>{{e.lugar.name}}</u></strong><br/></ng-template>
+                    {{e.description}}
+                    <br/>
+                    <strong>Invita:</strong> {{e.invites}}
+                </p>
+            </div>
+            <!-- /Evento. -->
+
+            <!-- Caousel de Fotografías./-->
+            <div class="col-2 w-100 h-100">
+
+                <carousel class="w-100 h-100">
+                    <slide *ngFor="let f of eventos[i].fotografias, index as fi;">
+                        <span *ngIf="f.file.match('data:image/jpeg;base64,') then imgAsUrl else imgAsFil"></span>
+                        <ng-template #imgAsUrl><img (click)="viewDialogoFotografiasMenos(i,fi)" src="{{f.file}}" style="width: 100%;height:100%;"></ng-template>
+                        <ng-template #imgAsFil><img (click)="viewDialogoFotografiasMenos(i,fi)" src="http://www.legislaturajujuy.gov.ar/webapps/protocolo/guia/{{f.file}}" style="width: 100%;height:100%;"></ng-template>
+                    </slide>
+                </carousel>
+
+                    <!-- Dialogo: Fotografia Eliminar./ -->
+                    <div
+                        class       = "modal fade"
+                        id          = "modalEventosFotografiasEliminarConfirmar"
+                        tabindex    = "-1"
+                        role        = "dialog"
+                        aria-hidden = "true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header bg-danger text-white">
+                                    <h5 class="modal-title"><img src="/imgcdn/icons/image.png"/> FOTOGRAFIA / Eliminar</h5>
+                                </div>
+                                <div class="modal-body text-center">
+                                        <div [ngClass]="['alert',alertFotografia.type]">{{alertFotografia.text}}</div>
+                                    ¿Esta seguro que desea eliminar esta fotografia?
+                                    <br/>
+                                    <img src="http://www.legislaturajujuy.gov.ar/webapps/protocolo/guia/{{fotografiaD.file}}" style="width: 100px;"/>
+                                </div>
+                                <div class="modal-footer">
+                                    <button
+                                        type  = "button"
+                                        class = "btn btn-danger btn-sm"
+                                        data-dismiss = "modal">
+                                        <img src="/imgcdn/icons/cross-button.png"/>
+                                        Cancelar
+                                    </button>
+                                    <button
+                                        type    = "button"
+                                        class   = "btn btn-success btn-sm"
+                                        (click) = "viewDialogoFotografiasMenosAceptar()">
+                                        <img src="/imgcdn/icons/tick-button.png"/>
+                                        Aceptar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Dialogo: Fotografia Eliminar. -->
+
+            </div>
+            <!-- /Caousel de Fotografías.-->
+
+            <hr class="col-12"/>
+        </div>
+        <!-- /Lista de Eventos -->
+
+
+        <!-- Formulario Eventos/ -->
+        <div
+            [ngClass]="['row', 'text-black', cssNuevo]">
+            <div
+                class="card card-outline-info w-75 mx-auto text-white">
                 <div class="card-header bg-info">
                     Nueva Actividad
                 </div>
                 <div class="card-block text-black">
 
-                    <!-- Dia -->
+                    <!-- Alert/ -->
+                    <div [ngClass]="['alert',alertEvento.type]">{{alertEvento.text}}</div>
+                    <!-- /Alert -->
+
+                    <!-- Fecha/ -->
                     <div class="input-group">
                         <span   class="input-group-addon"><img src="/imgcdn/icons/calendar.png"/></span>
-                        <span   class="input-group-addon">Día: </span>
-                        <select class="form-control text-center"><option *ngFor="let d of dias" value="{{d}}">{{d}}</option></select>
-                        <span   class="input-group-addon">Mes: </span>
-                        <select class="form-control text-center"><option *ngFor="let m of meses" value="{{m}}">{{m}}</option></select>
-                        <span   class="input-group-addon">Año: </span>
-                        <select class="form-control text-center"><option *ngFor="let a of anios" value="{{a}}">{{a}}</option></select>
-                    <!--/div-->
-
-                    <!-- Hora -->
-                    <!--div class="input-group"-->
-                        <span class="input-group-addon"><img src="/imgcdn/icons/clock-frame.png"/></span>
-                        <span class="input-group-addon">Hora: </span>
-                        <select class="form-control text-center"><option *ngFor="let h of horas" value="{{h}}">{{h}}</option></select>
-                        <span class="input-group-addon">Minutos: </span>
-                        <select class="form-control text-center"><option *ngFor="let m of minutos" value="{{m}}">{{m}}</option></select>
+                        <span   class="input-group-addon cssTitleFixedWidth">Fecha:</span>
+                        <select [(ngModel)]="evento.date.dia" class="form-control text-center"><option *ngFor="let d of dias" value="{{d}}">{{d}}</option></select>
+                        <span   class="input-group-addon">/</span>
+                        <select [(ngModel)]="evento.date.mes" class="form-control text-center"><option *ngFor="let m of meses;" value="{{m.value}}">{{m.name}}</option></select>
+                        <span   class="input-group-addon">/</span>
+                        <select [(ngModel)]="evento.date.anio" class="form-control text-center"><option *ngFor="let a of anios" value="{{a}}">{{a}}</option></select>
+                        <span class="input-group-addon">Hora:</span>
+                        <select [(ngModel)]="evento.date.hora" class="form-control text-center"><option *ngFor="let h of horas" value="{{h}}">{{h}}</option></select>
+                        <span class="input-group-addon">:</span>
+                        <select [(ngModel)]="evento.date.minutos" class="form-control text-center"><option *ngFor="let m of minutos" value="{{m}}">{{m}}</option></select>
                     </div>
+                    <!-- /Fecha -->
 
-                    <!-- Lugar -->
+                    <!-- Lugar/ -->
+                    <div class = "input-group">
+                        <span class= "input-group-addon"><img src="/imgcdn/icons/card.png"/></span>
+                        <span class= "input-group-addon cssTitleFixedWidth">Lugar:</span>
+                        <select
+                            (change)    = "viewChangeLugarA()"
+                            (focus)     = "resetAlerts()"
+                            [ngClass]   = "['form-control', 'text-center', cssLugarA]"
+                            [(ngModel)] = "evento.lugar.uriname">
+                            <option *ngFor="let l of lugares" value="{{l.uriname}}">{{l.name}}</option>
+                        </select>
+                        <input
+                            type        = "text"
+                            maxlength   = "150"
+                            (keyup)     = "viewChangeLugarB()"
+                            (focus)     = "resetAlerts()"
+                            [ngClass]   = "['form-control', cssLugarB]"
+                            [(ngModel)] = "evento.name"/>
+                        
+
+                        <!-- Botón: lugarMas/ -->
+                        <button
+                            type      = "button"
+                            [ngClass] = "['btn', 'btn-success', 'btn-sm', cssLugarA]"
+                            (click)   = "viewLugarMas()">
+                            <img src="/imgcdn/icons/plus-button.png"/>
+                        </button>
+                            <!-- Dialogo: lugar mas/ -->
+                            <div
+                                class    = "modal fade"
+                                id       = "modalLugarMas"
+                                tabindex = "-1"
+                                role     = "dialog"
+                                aria-labelledby = "exampleModalLabel"
+                                aria-hidden     = "true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-info text-white">
+                                            <h5 class="modal-title"><img src="/imgcdn/icons/card.png"/> LUGAR / Nuevo</h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div [ngClass]="['alert',alertLugares.type]">{{alertLugares.text}}</div>
+                                            <div class="input-group">
+                                                <span class="input-group-addon cssTitleFixedWidth2">Nombre:</span>
+                                                <input [(ngModel)]="lugar.name" class="form-control" type="text" maxlength="120">
+                                            </div>
+                                            <div class="input-group">
+                                                <span class="input-group-addon cssTitleFixedWidth2">Descripción:</span>
+                                                <input [(ngModel)]="lugar.description" class="form-control" type="text" maxlength="200">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button
+                                                type  = "button"
+                                                class = "btn btn-danger btn-sm"
+                                                data-dismiss = "modal">
+                                                <img src="/imgcdn/icons/cross-button.png"/>
+                                                Cancelar
+                                            </button>
+                                            <button
+                                                type    = "button"
+                                                class   = "btn btn-success btn-sm"
+                                                (click) = "viewLugarMasAceptar()">
+                                                <img src="/imgcdn/icons/tick-button.png"/>
+                                                Aceptar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Dialogo: lugar mas. -->
+                        <!-- /Botón: lugarMas -->
+
+
+                        <!-- Botón: lugar menos/ -->
+                        <button
+                            type        = "button"
+                            data-toggle = "modal"
+                            data-target = "#modalLugarMenos"
+                            [ngClass]   = "['btn', 'btn-danger', 'btn-sm', cssLugarA]">
+                            <img src="/imgcdn/icons/minus-button.png"/>
+                        </button>
+                            <!-- Dialogo: lugar menos/ -->
+                            <div
+                                class    = "modal fade"
+                                id       = "modalLugarMenos"
+                                tabindex = "-1"
+                                role     = "dialog"
+                                aria-labelledby = "exampleModalLabel"
+                                aria-hidden     = "true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-info text-white">
+                                            <h5 class="modal-title"><img src="/imgcdn/icons/card.png"/> LUGAR / Quitar</h5>
+                                        </div>
+                                        <div class="modal-body text-center">
+                                            ¿Esta seguro que desea eliminar el lugar?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button
+                                                type  = "button"
+                                                class = "btn btn-danger btn-sm"
+                                                data-dismiss = "modal">
+                                                <img src="/imgcdn/icons/cross-button.png"/>
+                                                Cancelar
+                                            </button>
+                                            <button
+                                                type    = "button"
+                                                class   = "btn btn-success btn-sm"
+                                                (click) = "viewLugarMenosAceptar()">
+                                                <img src="/imgcdn/icons/tick-button.png"/>
+                                                Aceptar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Dialogo: lugar menos. -->
+                        <!-- /Botón: lugar menos. -->
+
+
+                    </div>
+                    <!-- /Lugar -->
+
+                    <!-- Evento/ -->
                     <div class="input-group">
-                        <span class="input-group-addon"><img src="/imgcdn/icons/card.png"/></span>
-                        <span class="input-group-addon">Lugar:</span>
-                        <select class="form-control text-center"><option *ngFor="let l of lugares" value="l.uriname">{{l.name}}</option></select>
-                        <button type="button" class="btn btn-success"><img src="/imgcdn/icons/plus-button.png"/></button>
-                        <button type="button" class="btn btn-danger"><img src="/imgcdn/icons/minus-button.png"/></button>
+                        <span class="input-group-addon"><img src="/imgcdn/icons/clipboard-task.png"/></span>
+                        <span class="input-group-addon cssTitleFixedWidth">Evento:</span>
+                        <input (focus)="resetAlerts()" [(ngModel)]="evento.description" class="form-control" type="text" maxlength="150"/>
                     </div>
+                    <!-- /Evento -->
 
-                    <!-- Titulo -->
+                    <!-- Invita/ -->
                     <div class="input-group">
-                        <span class="input-group-addon"><img src="/imgcdn/icons/card.png"/></span>
-                        <span class="input-group-addon">Lugar:</span>
-                        <input class="form-control" type="text"/>
+                        <span class="input-group-addon"><img src="/imgcdn/icons/edit-signiture.png"/></span>
+                        <span class="input-group-addon cssTitleFixedWidth">Invita:</span>
+                        <input (focus)="resetAlerts()" [(ngModel)]="evento.invites" class="form-control" type="text" maxlength="150"/>
                     </div>
+                    <!-- /Invita -->
 
-                    <!-- Evento -->
+                    <!-- Estado/ -->
                     <div class="input-group">
-                        <span class="input-group-addon"><img src="/imgcdn/icons/calendar-previous.png"/></span>
-                        <span class="input-group-addon">Evento:</span>
-                        <input class="form-control" type="text"/>
+                        <span class="input-group-addon"><img src="/imgcdn/icons/ui-button-toggle.png"/></span>
+                        <span class="input-group-addon cssTitleFixedWidth">Estado:</span>
+                        <select (focus)="resetAlerts()" [(ngModel)]="evento.status" class="form-control">
+                            <option *ngFor="let s of ['INACTIVO','ACTIVO']" value="{{s}}">{{s}}</option>
+                        </select>
                     </div>
+                    <!-- /Estado -->
 
-                    <!-- Invita -->
-                    <div class="input-group">
-                        <span class="input-group-addon"><img src="/imgcdn/icons/tie.png"/></span>
-                        <span class="input-group-addon">Invita:</span>
-                        <input class="form-control" type="text"/>
-                    </div>
-
+                    <br/><br/>
                 </div>
                 <div class="card-footer text-right">
                     <button
-                        [ngClass] = "['btn', 'btn-danger','cssBtnFixedWidth']"
-                        type      = "button"
-                        (click)   = "cancelar()">
-                        <img src  = "/imgcdn/icons/cross-circle.png"/>
+                        class    = "btn btn-danger cssBtnFixedWidth"
+                        type     = "button"
+                        (click)  = "viewCancelar()">
+                        <img src = "/imgcdn/icons/cross-circle.png"/>
                         Cancelar
                     </button>
         
                     <button
-                        [ngClass] = "['btn', 'btn-info','cssBtnFixedWidth']"
-                        type      = "button"
-                        (click)   = "guardar()">
-                        <img src  = "/imgcdn/icons/plus-circle.png"/>
+                        class    = "btn btn-success cssBtnFixedWidth"
+                        type     = "button"
+                        (click)  = "viewGuardar()">
+                        <img src="/imgcdn/icons/tick-button.png"/>
                         Guardar
                     </button>
                 </div>
             </div>
-
         </div>
+        <!-- /Formulario Eventos. -->
+
+        
     </div>
+    <!-- /Body -->
+
+    <!-- Footer/ -->
     <div class="card-footer text-right">
         <div class="btn-group">
             <button
-                [ngClass] = "['btn','btn-info','cssBtnFixedWidth',cssBtnNuevo]"
                 type      = "button"
-                (click)   = "nuevo()">
+                [ngClass] = "['btn', 'btn-info', 'cssBtnFixedWidth', cssBtnNuevo]"
+                (click)   = "viewNuevo()">
                 <img src  = "/imgcdn/icons/card--plus.png"/>
                 Nuevo
             </button>
+            <button
+                type      = "button"
+                [ngClass] = "['btn', 'btn-danger', 'cssBtnFixedWidth', cssBtnNuevo]"
+                (click)   = "viewDescargar()">
+                <img src  = "/imgcdn/icons/blue-document-pdf-text.png"/>
+                Descargar en PDF
+            </button>
         </div>
     </div>
+    <!-- /Footer -->
+
 </div>
+
