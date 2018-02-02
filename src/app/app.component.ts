@@ -1,11 +1,15 @@
-// Componentes.
+/**
+ * @components : HttpClient, SessionService, Component, OnInit, TemplateRef, BsModalService, BsModalRef.
+ */
 import { HttpClient }         from '@angular/common/http';
 import { SessionService }     from './app.service.session';
 import { Component, OnInit, TemplateRef }  from '@angular/core';
 import { BsModalService }     from 'ngx-bootstrap/modal';
 import { BsModalRef }         from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
-// Interfaces.
+/**
+ * @interfaces : Mes, Alert, Fecha, Eventos, Lugares, Fotografia, FotografiaDelete, Jsonresponse.
+ */
 import { Mes }                from './app.interface.mes';
 import { Alert }              from './app.interface.alert';
 import { Fecha }              from './app.interface.fecha';
@@ -15,12 +19,8 @@ import { Fotografia }         from './app.interface.fotografia';
 import { FotografiaDelete}    from './app.interface.fotografia.delete';
 import { JsonResponse }       from './app.interface.json.response';
 
-declare var JQuery      : any;
-declare var $           : any; 
-
-
 /**
- * 
+ * @decorator : 
  */
 @Component({
   selector: 'app-root',
@@ -160,7 +160,7 @@ export class AppComponent implements OnInit {
   
 
   /**
-   * 
+   * @method : httpGetEventos().
    */
   private httpGetEventos       = () => {
     this
@@ -174,6 +174,9 @@ export class AppComponent implements OnInit {
       });
   };
 
+  /**
+   * @method : httpPostAndPutEvento().
+   */
   private httpPostAndPutEvento = () => {
     this
       .session
@@ -222,6 +225,9 @@ export class AppComponent implements OnInit {
       });
   };
 
+  /**
+   * @method : httpPostEventoPrint().
+   */
   private httpPostEventoPrint  = () => {
     this
       .session
@@ -296,7 +302,10 @@ export class AppComponent implements OnInit {
       });
   };
 
-  private httpDeleteEvento     = () => {
+  /**
+   * @method : httpDeleteEvento().
+   */
+  private httpDeleteEvento = () => {
     this
       .session
       .autorize(()=>{
@@ -318,9 +327,9 @@ export class AppComponent implements OnInit {
   };
 
   /**
-   * @method : httpPutEventoActivar.
+   * @method : httpPutEventoActivar().
    */
-  private httpPutEventoActivar   = () => {
+  private httpPutEventoActivar = () => {
     this
       .session
       .autorize(()=>{
@@ -335,7 +344,7 @@ export class AppComponent implements OnInit {
   };
 
   /**
-   * @method : httpPutEventoInActivar.
+   * @method : httpPutEventoInActivar().
    */
   private httpPutEventoInActivar = () => {
     this
@@ -351,9 +360,10 @@ export class AppComponent implements OnInit {
       });
   };
 
-
-  // Lugares.
-  private httpGetLugares       = () => {
+  /**
+   * @method : httpGetLugares().
+   */
+  private httpGetLugares = () => {
     this
       .session
       .autorize(()=>{
@@ -365,7 +375,10 @@ export class AppComponent implements OnInit {
       });
   };
 
-  private httpPostLugar        = () => {
+  /**
+   * @method : httpPostLugar().
+   */
+  private httpPostLugar = () => {
     this
       .session
       .autorize(()=>{
@@ -384,7 +397,7 @@ export class AppComponent implements OnInit {
               this.alertLugares.text = 'El lugar se guardó en forma correcta.';
               this.lugares.push(this.lugar);
               this.evento.lugar.uriname=this.lugares[this.lugares.length -1].uriname;
-              $('#modalLugarMas').modal('hide');
+              this.modalRef.hide();
             }
             else{
               this.alertLugares.type = 'alert-danger';
@@ -397,7 +410,10 @@ export class AppComponent implements OnInit {
       });
   };
 
-  private httpDeleteLugar      = () => {
+  /**
+   * @method : httpDeleteLugar().
+   */
+  private httpDeleteLugar = () => {
     this
       .session
       .autorize(()=>{
@@ -416,12 +432,14 @@ export class AppComponent implements OnInit {
             this.alertEvento.text = 'No se pudo conectar con el servidor.';
           });
           this.evento.lugar.uriname=this.lugares[1].uriname;
-        $('#modalLugarMenos').modal('hide');
+          this.modalRef.hide();
     });
   };
   
-  // Fotografias.
-  private httpPostFotografias  = () => {
+  /**
+   * @method : httpPostFotografias().
+   */
+  private httpPostFotografias = () => {
     let url = '/rest/ful/webapps/protocolo/guia/index.php/evento/' + this.evento.uriname + '/fotografias';
     let fotografias = new Array();
     for(let i in this.evento.fotografias) if(this.evento.fotografias[i].file.match('data:image/jpeg;base64,')) fotografias.push(this.evento.fotografias[i]);
@@ -435,6 +453,9 @@ export class AppComponent implements OnInit {
       });
   };
 
+  /**
+   * @method : httpDeleteFotografia().
+   */
   private httpDeleteFotografia = () => {
     let url = '/rest/ful/webapps/protocolo/guia/index.php/evento/';
     url += this.eventos[this.fotografiaD.indexEvento].uriname;
@@ -458,9 +479,10 @@ export class AppComponent implements OnInit {
       });
   };
 
-
-  // Resets.
-  private resetDate  = () => {
+  /**
+   * @method : resetDate().
+   */
+  private resetDate = () => {
     this.evento.date.dia     = this.d.getDate().toString();
     this.evento.date.mes     = (this.d.getMonth() +1).toString();
     this.evento.date.anio    = this.d.getFullYear().toString();
@@ -472,7 +494,10 @@ export class AppComponent implements OnInit {
     if(this.evento.date.minutos.length===1) this.evento.date.minutos = '0' +this.evento.date.minutos;
   }
 
-  private resetOn    = () => {
+  /**
+   * @method : resetOn().
+   */
+  private resetOn = () => {
     this.evento  = {
       lugar:{
         name:'',
@@ -512,7 +537,10 @@ export class AppComponent implements OnInit {
     this.resetDate();
   };
 
-  private resetOff   = () => {
+  /**
+   * @method : resetOff().
+   */
+  private resetOff = () => {
     this.httpGetEventos();
     this.httpGetLugares();
     this.cssLugarA   = 'show';
@@ -521,10 +549,11 @@ export class AppComponent implements OnInit {
     this.cssBtnNuevo = 'show';
     this.editMode    = false;
     this.modalRef.hide();
-    $('#modalEventosEliminar').modal('hide');
-    $('#modalEventosFotografiasEliminarConfirmar').modal('hide');
   };
 
+  /**
+   * @method : resetAlerts().
+   */
   public resetAlerts = () => {
     this.alertEvento.type     = 'alert-info';
     this.alertEvento.text     = 'Complete el formulario.';
@@ -535,8 +564,10 @@ export class AppComponent implements OnInit {
   };
 
 
-  // Formulario: Lugares.
-  public viewChangeLugarA      = () => {
+  /**
+   * @mthod : viewChangeLugarA().
+   */
+  public viewChangeLugarA = () => {
     if(this.evento.lugar.uriname==='------'){
       this.evento.name = '';
       this.cssLugarA = 'hide';
@@ -544,7 +575,10 @@ export class AppComponent implements OnInit {
     }
   }
 
-  public viewChangeLugarB      = () => {
+  /**
+   * @method : viewChangeLugarB().
+   */
+  public viewChangeLugarB = () => {
     if(this.evento.name===''){
       this.evento.lugar.uriname=this.lugares[1].uriname;
       this.evento.name = Date.now().toString();
@@ -553,25 +587,57 @@ export class AppComponent implements OnInit {
     }
   };
 
-  public viewLugarMas          = () => {
+  /**
+   * @method : viewLugarMas().
+   */
+  public viewLugarMas = (dialog : TemplateRef<any>) => {
     this.lugar.name='';
     this.lugar.uriname='';
     this.lugar.description='';
     this.resetAlerts();
-    $('#modalLugarMas').modal('show');
+    this.modalRef = this.modalService.show(dialog);
   };
 
-  public viewLugarMasAceptar   = () => {
+  /**
+   * @method : viewLugarMasCancelar().
+   */
+  public viewLugarMasCancelar = () => {
+    this.modalRef.hide();
+  };
+
+  /**
+   * @method : viewLugarMasAceptar().
+   */
+  public viewLugarMasAceptar = () => {
     this.httpPostLugar();
   };
 
+  /**
+   * @method : viewLugarMenos().
+   */
+  public viewLugarMenos = (dialog : TemplateRef<any>) => {
+    this.resetAlerts();
+    this.modalRef = this.modalService.show(dialog);
+  };
+
+  /**
+   * @method : viewLugarMenosCancelar();
+   */
+  public viewLugarMenosCancelar = () => {
+    this.modalRef.hide();
+  };
+  
+  /**
+   * @method : viewLugarMenosAceptar();
+   */
   public viewLugarMenosAceptar = () => {
     this.httpDeleteLugar();
   };
 
-
-  // Formulario: Fotografias.
-  public viewDialogoFotografiasMas          = (i) =>{
+  /**
+   * @method : viewDialogoFotografiasMas().
+   */
+  public viewDialogoFotografiasMas = (i) =>{
     this.eventoIndex = i;
     this.evento = this.eventos[this.eventoIndex];
 
@@ -621,46 +687,79 @@ export class AppComponent implements OnInit {
     };
   };
 
-  public viewDialogoFotografiasMenos        = (indexEvento:number,indexFotografia:number) => {
+  /**
+   * @method : viewDialogoFotografiasMenos().
+   * @param  : dialog : TemplateRef<any>.
+   * @param  : indexEvento : number.
+   * @param  : indexFotografia : number
+   */
+  public viewDialogoFotografiasMenos = (dialog : TemplateRef<any>, indexEvento:number,indexFotografia:number) => {
     this.resetAlerts();
     this.fotografiaD.indexEvento     = indexEvento;
     this.fotografiaD.indexFotografia = indexFotografia;
     this.fotografiaD.file            = this.eventos[indexEvento].fotografias[indexFotografia].file;
-    $('#modalEventosFotografiasEliminarConfirmar').modal('show');
+    this.modalRef = this.modalService.show(dialog);
   };
 
+  /**
+ * @method : viewDialogoFotografiasMenosCancelar().
+ */
+  public viewDialogoFotografiasMenosCancelar = () => {
+    this.modalRef.hide();
+  };
+
+  /**
+   * @method : viewDialogoFotografiasMenosAceptar().
+   */
   public viewDialogoFotografiasMenosAceptar = () => {
     this.httpDeleteFotografia();
   };
 
-
-  // Formulario: Eventos.
-  public viewDialogoEventoEliminar  = (i) => {
+  /**
+   * @method : viewDialogoEventoEliminar().
+   * @param  : i : number.
+   * @param  : dialog : TemplateRef<any>.
+   */
+  public viewDialogoEventoEliminar = (dialog : TemplateRef<any>, i : number) => {
     this.eventoIndex = i;
     this.resetAlerts();
-    $('#modalEventosEliminar').modal('show');
+    this.modalRef = this.modalService.show(dialog);
   };
 
-  public viewDialogoEventoModificar = (i) => {
-    this.eventoIndex = i;
-    this.resetAlerts();
-    $('#modalEventosModificar').modal('show');
+  /**
+   * @method : viewDialogoEventoEliminarCancelar().
+   */
+  public viewDialogoEventoEliminarCancelar = () => {
+    this.modalRef.hide();
   };
 
-  public viewCancelar  = () => {
-    this.resetOff();
-  };
-
-  public viewGuardar   = () => {
-    this.httpPostAndPutEvento();
-  };
-
-  public viewEliminar  = () => {
+  /**
+   * @method : viewEliminar().
+   */
+  public viewDialogoEventoEliminarAceptar = () => {
     this.httpDeleteEvento();
   };
 
-  public viewModificar = () => {
-    $('#modalEventosModificar').modal('hide');
+  /**
+   * @method : viewDialogoEventoModificar().
+   */
+  public viewDialogoEventoModificar = (dialog : TemplateRef<any>, i) => {
+    this.eventoIndex = i;
+    this.resetAlerts();
+    this.modalRef = this.modalService.show(dialog);
+  };
+
+  /**
+   * @method : viewDialogoEventoModificarCancelar().
+   */
+  public viewDialogoEventoModificarCancelar = () => {
+    this.modalRef.hide();
+  };
+
+  /**
+  * @method : viewDialogoEventoModificarAceptar().
+  */
+  public viewDialogoEventoModificarAceptar = () => {
     this.resetOn();
     this.editMode = true;
     this.evento = this.eventos[this.eventoIndex];
@@ -672,48 +771,75 @@ export class AppComponent implements OnInit {
       this.cssLugarA = 'show';
       this.cssLugarB = 'hide';
     }
+    this.modalRef.hide();
+  };
+  /**
+   * @method : viewCancelar().
+   */
+  public viewCancelar  = () => {
+    this.resetOff();
+    this.modalRef.hide();
   };
 
+  /**
+   * @method : viewGuardar().
+   */
+  public viewGuardar = () => {
+    this.httpPostAndPutEvento();
+  };
+
+  /**
+   * @method : viewDescargar().
+   */
   public viewDescargar = () => {
     this.httpPostEventoPrint();
   };
 
-  public viewNuevo     = () => {
+  /**
+   * @method : viewNuevo(modal:TemplateRef<any>).
+   * @param  : modal : TemplateRef<any>.
+   */
+  public viewNuevo = (modal : TemplateRef<any>) => {
     this.resetOn();
     this.evento.name = Date.now().toString();
     this.evento.lugar.uriname=this.lugares[1].uriname;
+    this.modalRef = this.modalService.show(modal);
   };
 
   /**
-   * @method : viewDialogEventoConfirmChangeStatus.
-   */
+ * @method : viewDialogEventoConfirmChangeStatus().
+ * @param  : dialog : TemplateRef<any>.
+ * @param  : i : number.
+ */
   public viewDialogEventoConfirmChangeStatus = (dialog: TemplateRef<any>,i : number) => {
     this.eventoIndex = i;
     this.modalRef = this.modalService.show(dialog);
   };
   
   /**
-   * @method : viewDialogEventoConfirmChangeStatusCerrar.
+   * @method : viewDialogEventoConfirmChangeStatusCerrar().
    */
-  public viewDialogEventoConfirmChangeStatusCerrar   = () => {
+  public viewDialogEventoConfirmChangeStatusCerrar = () => {
     this.modalRef.hide();
   };
 
   /**
-   * @method : viewDialogEventoConfirmChangeStatusInactive.
+   * @method : viewDialogEventoConfirmChangeStatusInactive().
    */
   public viewDialogEventoConfirmChangeStatusInactive = () => {
     this.httpPutEventoInActivar();
   };
 
   /**
-   * @method : viewDialogEventoConfirmChangeStatusActive.
+   * @method : viewDialogEventoConfirmChangeStatusActive().
    */
-  public viewDialogEventoConfirmChangeStatusActive  = () => {
+  public viewDialogEventoConfirmChangeStatusActive = () => {
     this.httpPutEventoActivar();
   };
 
-  // Misc.
+  /**
+   * @method : monthToString().
+   */
   public monthToString = (month:string)=>{
     let $return = '';
     for(let i = 0; i < this.meses.length; i++) if(this.meses[i].value===month) $return = this.meses[i].name;
